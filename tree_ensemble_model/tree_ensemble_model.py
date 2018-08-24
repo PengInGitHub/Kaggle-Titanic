@@ -1,6 +1,7 @@
 from sklearn import tree
 import pandas as pd
 import numpy as np
+from sklearn.ensemble import RandomForestClassifier
 
 file_path = "/Users/pengchengliu/go/src/github.com/user/Titanic/data/"
 train = pd.read_csv(file_path+"train.csv")
@@ -70,12 +71,40 @@ submit = pd.DataFrame(my_prediction, PassengerId, columns=['Survived'] )
 print submit.shape
 submit.to_csv('submit.csv', index_label=['PassengerId'])
 
+#limit the model complexity
+feature2 = ['Pclass', 'Age', 'Fare', 'Sex', 'Embarked', 'Parch', 'SibSp']
+features_two = train[feature2]
+my_tree_one = tree.DecisionTreeClassifier(max_depth=10, min_samples_split=5,
+                                          random_state=1)
+my_tree_two = my_tree_one.fit(features_two, target)
+print my_tree_two.score(features_two, target)
+
+test_features= test[feature2].values
+my_prediction = my_tree_two.predict(test_features)
 
 
+#feature engineering
+#family size = Parch + SibSp
+full['FamilySize'] = full['Parch'] + full['SibSp'] + 1
+train, test = full[:891], full[891:]
+features_three = train[feature2+['FamilySize']]
+my_tree_three = tree.DecisionTreeClassifier(max_depth=10, min_samples_split=5,
+                                          random_state=1)
+my_tree_three = my_tree_three.fit(features_three, target)
+print my_tree_three.score(features_three, target)
+
+test_features= test[feature2+['FamilySize']].values
+my_prediction = my_tree_three.predict(test_features)
 
 
+#random forest
+forest = RandomForestClassifier(max_depth=5, min_samples_split=2, 
+                                n_estimators=100, random_state=1)
 
-
+forest = forest.fit(features_three, target)
+print forest.score(features_three, target)
+print my_tree_two.feature_importances_
+my_prediction = forest.predict(test_features)
 
 
 
