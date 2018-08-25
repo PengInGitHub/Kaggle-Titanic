@@ -1,8 +1,12 @@
+#https://www.kaggle.com/chapagain/titanic-solution-a-beginner-s-guide
+#strategy from Mukesh Chapagain
+
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
+from func import load_data
 
 #outline
 #1.EDA: Exploratory Data Analysis with Visualization
@@ -13,10 +17,7 @@ from sklearn.ensemble import RandomForestClassifier
 #1.EDA: Exploratory Data Analysis with Visualization
 
 #1.1 load data
-file_path = "/Users/pengchengliu/go/src/github.com/user/Titanic/data/"
-train = pd.read_csv(file_path+"train.csv")
-test = pd.read_csv(file_path+"test.csv")
-
+train, test = load_data()
 #1.2 data structure
 print train.shape#891*12
 train.describe()#statistics on numerical variables
@@ -112,7 +113,7 @@ for data in train_test_data:
 train['Title'].head()
 #see new distribution
 train[['Title','Survived']].groupby('Title', as_index=False).mean()
-#convert categorical into numeric
+#convert categorical into ordinal
 #use Series.map(a_map_object)
 title_mapping = {'Mr':1, 'Miss':2, 'Mrs':3, 'Master':4, 'Other':5}
 for data in train_test_data:
