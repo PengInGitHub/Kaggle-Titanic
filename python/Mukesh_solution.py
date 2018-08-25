@@ -17,7 +17,7 @@ from func import load_data
 #1.EDA: Exploratory Data Analysis with Visualization
 
 #1.1 load data
-train, test = load_data()
+train, test, combine = load_data()
 #1.2 data structure
 print train.shape#891*12
 train.describe()#statistics on numerical variables
